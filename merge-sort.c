@@ -47,7 +47,7 @@ void merge(int *array, int start, int end1, int end)
 
     while(a <= end1 && b <= end)  // while none of the halves have been 100% sorted
     {
-        // a loops through the first half and b through the second one, i keeps the index of the array
+        // a loops through the first half and b through the second one, z keeps the buffer's index
         if (array[b] <= array[a]) // if the sec half element is smaller than the first half element
         {
             buffer[z] = array[b]; // then it must occupy the [i] position
@@ -69,7 +69,7 @@ void merge(int *array, int start, int end1, int end)
     if (a > end1)
     {
         //  just copy the rest of the second half into the buffer
-        //  there is actually no need to do this, we can jump to copying the buffer elements into the array until i = end - b, because the rest is there already
+        //  there is actually no need to do this, we could jump to copying the buffer elements into the array until i = end - b, because the rest is there already
         while (b <= end)
         {
             //DEBUGprintf("A sorted, copying\n");
