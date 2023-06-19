@@ -158,6 +158,35 @@ int showItemsInSlots(int slots[], int slotsSize, struct node *hashTable[]){
 
 }
 
+int unloadNode(struct node *cursor){
+    // recursively free nodes
+    // we'll unload at least one node (cursor)
+    int unloadedNodes = 1;
+
+    // if next node is populated, unload it and add it's return value to unloadedNodes
+    if (cursor->next != NULL){
+        unloadedNodes += unloadNode(cursor->next);
+    }
+
+    free(cursor);
+    return unloadedNodes;
+}
+
+int unloadHashTable(struct node *hashTable[]){
+    // loop through every slot
+    int unloadedNodes = 0;
+    for (int i = 0; i < MAXKEYS; i++){
+        // if slot is not populated, check the next
+        if (hashTable[i] == NULL){
+            continue;
+        }
+
+        unloadedNodes += unloadNode(hashTable[i]);
+    }
+    return unloadedNodes;
+
+}
+
 int main(int argc, char *argv[]){
 
     //Dprintf("hashcode %d", hashF("aveia"));
@@ -187,6 +216,8 @@ int main(int argc, char *argv[]){
     //showItemsInSlots(overusedSlots, 5, hashTable);
     showItemsInSlot(0, hashTable);
     printf("%d, ", itemsInSlot(0, hashTable));
+
+    printf("unloaded nodes: %d", unloadHashTable(hashTable));
    
 
 
