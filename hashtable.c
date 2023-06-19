@@ -98,6 +98,26 @@ int addWord(char *word, struct node *hashTable[]){
 
 int itemsInSlot(int hashCode, struct node *hashTable[]){
     if (hashTable[hashCode] == NULL){
+        return 0;
+    }
+    
+    // there is at least one node
+    int itemCount = 1;
+    struct node *cursor = hashTable[hashCode];
+    while (cursor->next != NULL){
+        cursor = cursor->next;
+        // printf("%d, ", itemCount);
+        itemCount++;
+    }
+
+    // printf("%d, ", itemCount);
+    // reached last node
+    return itemCount;
+
+}
+
+int showItemsInSlot(int hashCode, struct node *hashTable[]){
+    if (hashTable[hashCode] == NULL){
         return 1;
     }
 
@@ -109,9 +129,10 @@ int itemsInSlot(int hashCode, struct node *hashTable[]){
         // append word to the output buffer
         printf("%s, ", cursor->word);
     }
+    
     // print output buffer
-    puts("");
-    free(cursor);
+    puts(" ");
+    return 0;
 }
 
 
@@ -127,11 +148,12 @@ int loadFileIntoHashTable(FILE *file, struct node *hashTable[]){
 }
 
 
-int itemsInSlots(int slots[], struct node *hashTable){
+
+int showItemsInSlots(int slots[], int slotsSize, struct node *hashTable[]){
     // print items in many slots at once
-    for (int i = 0; i < sizeof(slots)/sizeof(int) - 1; i++)
+    for (int i = 0; i < slotsSize - 1; i++)
     {
-        itemsInSlot(slots[i], hashTable);
+        showItemsInSlot(slots[i], hashTable);
     }
 
 }
@@ -139,13 +161,17 @@ int itemsInSlots(int slots[], struct node *hashTable){
 int main(int argc, char *argv[]){
 
     //Dprintf("hashcode %d", hashF("aveia"));
+    char *filename = "words.txt";
     if (argc != 2)
     {
         printf("Usage: ./main textfile.txt\nWhere text.file is a file of whitespace separated words of max length %d\n", MAXLENGTH);
-        return 1;
+    }
+    else
+    {
+        char *filename = argv[1];
     }
 
-    char *filename = argv[1];
+
     FILE *file = fopen(filename, "r");
     if (file == NULL){
         puts("Couldn't open file\n");
@@ -155,5 +181,15 @@ int main(int argc, char *argv[]){
         puts("slot,followedNodes");
         loadFileIntoHashTable(file, hashTable);
     fclose(file);
+
+    int overusedSlots[5] = {0, 423, 45, 957};
+
+    //showItemsInSlots(overusedSlots, 5, hashTable);
+    showItemsInSlot(0, hashTable);
+    printf("%d, ", itemsInSlot(0, hashTable));
+   
+
+
+
     
 }
