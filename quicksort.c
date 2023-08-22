@@ -11,7 +11,7 @@ int start = 0;
 
 quicksort(array, start, endarray);
 for (int i = 0; i < endarray + 1; i++) printf("%d,", array[i]);
-puts("");
+printf("\n");
 
 }
 
@@ -22,13 +22,15 @@ if ((end - start) == 0)
     printf("%d - %d = 0\n", end, start);
     return;
 }
+
+
 int pivot = array[end];
 int swap;
-//  scout searches for elements that want to be sorted,
-// swap marks the position of one of the elements that we'll swap
-int scoutIdx = start, zwapIdx = start - 1;
+//  scoutIdx searches for elements that must to be sorted by looping through the array,
+// swapIdx marks the position of one of the elements that we'll swap
+int scoutIdx = start, swapIdx = start - 1;
 
-for (int i = 0; i < end + 1; i++)
+while(1)
 {
     if (array[scoutIdx] > pivot) {
         printf("%d > %d, pass\n", array[scoutIdx], pivot);
@@ -37,29 +39,29 @@ for (int i = 0; i < end + 1; i++)
     }
     else 
     {
-        zwapIdx++;
+        swapIdx++;
         printf("%d <= %d, pass\n", array[scoutIdx], pivot);
         // it's <= pivot.
         if (scoutIdx == end){
             // if we got to the end of the array and have to put the pivot in place
-            array[end] = array[zwapIdx];
-            array[zwapIdx] = pivot;
-            puts("\tpivot reached\n");
+            array[end] = array[swapIdx];
+            array[swapIdx] = pivot;
+            printf("\tpivot reached\n");
             break;
                 
         }
-        if (scoutIdx == zwapIdx){
+        if (scoutIdx == swapIdx){
             // if there is nothing to swap, continue
             printf("scoutidx = swapidx, pass\n");
             scoutIdx++;
         }
-        else 
-        {    
+        else {
+            
                 // smaller than the pivot
                 // if there is, swap
                 swap = array[scoutIdx];  // smaller
-                array[scoutIdx] = array[zwapIdx];
-                array[zwapIdx] = swap;
+                array[scoutIdx] = array[swapIdx];
+                array[swapIdx] = swap;
                 scoutIdx++;
         }
     }
@@ -73,10 +75,11 @@ for (int i = 0; i < end + 1; i++)
     if (i == end) printf("|");
     
 } 
-puts("");
-//recursively quicksort each part, start-pivotindex and pivotindex+1-end
-quicksort(array, start, zwapIdx - 1);
-quicksort(array, zwapIdx, end);
+printf("\n");
+// recursively quicksort each part, start-pivotindex and pivotindex+1-end
+// todo: check if those arrays segments are of length 0 before calling funcs over them
+quicksort(array, start, swapIdx - 1);
+quicksort(array, swapIdx, end);
 
 
 }
