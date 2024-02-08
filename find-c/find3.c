@@ -77,7 +77,7 @@ int dirrecursor(char dirpath[]){
 	}
 	else {
 		// an error or there is no entry in the dir ig idk
-		printf("Couldnt open directory '%s', terminating. Fournir un fichier no droit s'il vous plaît\n", dirpath);
+		printf("Couldnt open directory '%s', terminating. Fournir un fichier and a non regex filter, s'il vous plaît\n", dirpath);
 	}
 
 	return 0;
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
 		strncpy(cwd, argv[1], MAX_PATH);
 		strncpy(FILTERNAME, argv[2], NAME_MAX);
 	}
-	else puts("Fournir un fichier and a non regex filter, s'il vous plaît");
+	else puts("fournir le nom correct d'un fichier et un filtre non-regex, s'il vous plaît");
 
 	int cwdLen = strlen(cwd);
 	puts(cwd);
