@@ -77,7 +77,7 @@ int dirrecursor(char dirpath[]){
 	}
 	else {
 		// an error or there is no entry in the dir ig idk
-		printf("Couldnt open directory '%s', terminating\n", dirpath);
+		printf("Couldnt open directory '%s', terminating. Fournir un fichier and a non regex filter, s'il vous plaît\n", dirpath);
 	}
 
 	return 0;
@@ -95,41 +95,19 @@ int main(int argc, char *argv[])
 	//
 	struct dirent * ep;
 
-	char cwd[MAX_PATH] = "./output";
-	if (argc == 3 )
+	char cwd[MAX_PATH] = "./output"; 
+	if (argc == 3)
 	{
 		strncpy(cwd, argv[1], MAX_PATH);
 		strncpy(FILTERNAME, argv[2], NAME_MAX);
 	}
-	else puts("Fournir un fichier s'il vous plaît");
+	else puts("fournir le nom correct d'un fichier et un filtre non-regex, s'il vous plaît");
+	puts(FILTERNAME);
+	
 
 	int cwdLen = strlen(cwd);
 	puts(cwd);
 
-	dp = opendir(cwd);
-	if (dp != NULL)
-	{
-		while ((ep = readdir(dp)))
-		{
-          //printf("SPECIAL: %s | d_type = %d\n", ep->d_name, ep->d_type);
-			if (ep->d_type == DT_DIR && (strcmp(ep->d_name, ".") != 0 && strcmp(ep->d_name, "..") != 0))
-			{
-				//if is a dir
-				printf("%s/%s\n", cwd, ep->d_name);
-				dirrecursor(joinPath(cwd, ep->d_name));
-
-			}
-			else if (ep->d_type == DT_REG | ep->d_type == DT_LNK)
-			{
-			 	//printf("SPECIAL: %s | d_type = %d\n", ep->d_name, ep->d_type);
-				printf("%s/%s\n", cwd, ep->d_name);
-			}
-			if (compareNames(ep->d_name)) printf("\tFUCKING FOUND IT:%s/%s\n",cwd, ep->d_name );
-		}
-
-		closedir(dp);
-	}
-	else printf("Fournir un fichier no droit s'il vous plaît\n", cwd);
-
+	dirrecursor(cwd);
 	return 0;
 }
