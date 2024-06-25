@@ -95,19 +95,31 @@ int main(int argc, char *argv[])
 	//
 	struct dirent * ep;
 
-	char cwd[MAX_PATH] = "./output"; 
-	if (argc == 3)
-	{
-		strncpy(cwd, argv[1], MAX_PATH);
-		strncpy(FILTERNAME, argv[2], NAME_MAX);
+
+
+	char option;
+	char *dirName; dirName = NULL;
+	
+	while ((option = getopt(argc, argv, "r:")) != -1){
+		if (option == 'r'){
+			FILTERNAME = optarg;
+		}
+		else if (option == '?'){
+		 if (optopt == 'r') fprintf(stderr, "option -%c requires an argument", optopt);
+		 else fprintf(stderr, "unknown option -%c", optopt);
+		}
 	}
-	else puts("fournir le nom correct d'un fichier et un filtre non-regex, s'il vous plaît");
-	puts(FILTERNAME);
+	if (optind < argc) dirName = strncpy((char *) malloc(MAX_PATH * sizeof(char)), argv[optind], MAX_PATH);
+	else dirName = joinPath(".", "");
+
+
+
+	
+	if (FILTERNAME)printf("\tregex filter is %s\n", FILTERNAME);
 	
 
-	int cwdLen = strlen(cwd);
-	puts(cwd);
+	printf("\tfinding in %s\n========\n", dirName);
 
-	dirrecursor(cwd);
+	dirrecursor(dirName);
 	return 0;
 }
