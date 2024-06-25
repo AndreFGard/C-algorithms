@@ -126,7 +126,11 @@ int main(int argc, char *argv[])
 	if (optind < argc) dirName = strncpy((char *) malloc(MAX_PATH * sizeof(char)), argv[optind], MAX_PATH);
 	else dirName = joinPath(".", "");
 
-
+	if (dirName[strlen(dirName) -1] != "/") {
+		char *temp = dirName;
+		dirName = joinPath(dirName, "");
+		free(temp);
+	}
 
 	
 	if (FILTERNAME)printf("\tregex filter is %s\n", FILTERNAME);
