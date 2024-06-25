@@ -7,6 +7,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+
+#include <ctype.h>
+#include <unistd.h>
+
+
+
 // max PATH length in linux
 #define MAX_PATH 4096 + 1
 // max file NAME length in linux
@@ -14,7 +20,7 @@
 
 //start index of the current file/dir name
 int8_t PATH_SLASH_INDEX = -1;
-char FILTERNAME[NAME_MAX] = "";
+char *FILTERNAME = NULL;
 struct options {
 	bool look_for_name;
 	bool wildcard_used;
@@ -25,19 +31,24 @@ struct options {
 char *joinPath(char path[], char dirname[]) {
 	char *joinedPath = (char*) malloc(MAX_PATH * sizeof(char));
 	int pathLen = strlen(path);
-	path[pathLen] = '/';
 	
 	strcpy(joinedPath, path);
-	strcpy(joinedPath + pathLen + 1, dirname);
+	//joinedPath[pathLen] = '/';
+	strcpy(joinedPath + pathLen, dirname);
+	pathLen += strlen(dirname);
+	joinedPath[pathLen] = '/'; joinedPath[pathLen+1] = '\0';
 
-	path[pathLen] = '\0';
 	PATH_SLASH_INDEX = pathLen;
 	return joinedPath;
 }
 
 //returns if the dir/file name matches the one that the user wants
 bool compareNames(char thingName[]){
-	if (strcmp(thingName, FILTERNAME) == 0) return true;
+	if (FILTERNAME)
+	{
+		if (strcmp(thingName, FILTERNAME) == 0) return true;
+		else return false;
+	}
 	else return false;
 }
 
@@ -56,7 +67,7 @@ int dirrecursor(char dirpath[]){
 			{
 				//if is a dir
 				//printf("%s/%s/\t- from recursed\n", dirpath, ep->d_name);
-				printf("%s/%s\n", dirpath, ep->d_name);
+				printf("%s%s\n", dirpath, ep->d_name);
 				//printf("with dirpath: %s and dirname %s\n", dirpath, ep->d_name);
 				dirrecursor(joinPath(dirpath, ep->d_name));
 					// strncpy(cwd + cwdLen + 1, ep->d_name, strlen(ep->d_name) + 1);
@@ -68,9 +79,11 @@ int dirrecursor(char dirpath[]){
 			else if (ep->d_type == DT_REG | ep->d_type == DT_LNK)
 			{
 			 	//printf("SPECIAL: %s | d_type = %d\n", ep->d_name, ep->d_type);
-				printf("%s/%s\n", dirpath, ep->d_name);
+				printf("%s%s\n", dirpath, ep->d_name);
 			}
-			if (compareNames(ep->d_name)) printf("\tFUCKING FOUND IT:%s/%s",dirpath, ep->d_name );
+			if (compareNames(ep->d_name)) {
+				printf("\tFUCKING FOUND IT:%s/%s",dirpath, ep->d_name );
+			}
 		}
 
 		closedir(dp);
@@ -80,6 +93,7 @@ int dirrecursor(char dirpath[]){
 		printf("Couldnt open directory '%s', terminating. Fournir un fichier and a non regex filter, s'il vous plaît\n", dirpath);
 	}
 
+	free(dirpath);
 	return 0;
 }
 
