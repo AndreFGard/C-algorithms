@@ -11,6 +11,12 @@
 #include <ctype.h>
 #include <unistd.h>
 
+extern enum DT_DIR;
+extern enum DT_REG;
+extern enum DT_LNK;
+
+extern char *optarg;
+extern int optopt, optind;
 
 
 // max PATH length in linux
@@ -126,7 +132,7 @@ int main(int argc, char *argv[])
 	if (optind < argc) dirName = strncpy((char *) malloc(MAX_PATH * sizeof(char)), argv[optind], MAX_PATH);
 	else dirName = joinPath(".", "");
 
-	if (dirName[strlen(dirName) -1] != "/") {
+	if (dirName[strlen(dirName) -1] != '/') {
 		char *temp = dirName;
 		dirName = joinPath(dirName, "");
 		free(temp);
